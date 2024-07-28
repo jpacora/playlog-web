@@ -1,5 +1,5 @@
 import { Terminal } from 'xterm'
-import { TTYLog } from './ttylog';
+import { TTYLog } from './ttylog'
 
 import './style.css'
 import '../node_modules/xterm/css/xterm.css'
@@ -8,6 +8,23 @@ async function startup() {
     // read logfile from query parameter
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
+    // rows
+    let rows: string|number  = urlParams.get('rows') || undefined
+    let cols: string|number  = urlParams.get('cols') || undefined
+    if(rows) {
+        const parsed = parseInt(rows)
+        if(isNaN(parsed) == false) {
+            rows = parsed
+        }
+    }
+
+    if(cols) {
+        const parsed = parseInt(cols)
+        if(isNaN(parsed) == false) {
+            cols = parsed
+        }
+    }
+    // filename
     const filename = urlParams.get('l')
     if (filename === null) {
         console.error('no logfile specified');
@@ -18,8 +35,20 @@ async function startup() {
     const h = document.querySelector('h1#playlog-title');
     h.innerHTML = filename;
 
+    const termOptions: any = {
+        convertEol: true,
+    }
+
+    if(rows) {
+        termOptions["rows"] = rows
+    }
+
+    if(cols) {
+        termOptions["cols"] = cols
+    }
+
     // initialize xterm.js
-    const term = new Terminal({ convertEol: true });
+    const term = new Terminal(termOptions);
     const elem = document.getElementById('terminal');
     if (elem === null) {
         console.error('terminal element not found in dom');

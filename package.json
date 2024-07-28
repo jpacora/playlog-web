@@ -34,6 +34,7 @@
     "webpack-merge": "^5.10.0"
   },
   "dependencies": {
+    "axios": "^1.7.2",
     "xterm": "^4.19.0"
   }
 }
